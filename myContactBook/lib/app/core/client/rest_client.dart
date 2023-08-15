@@ -4,7 +4,7 @@ import 'package:dio/native_imp.dart';
 class CustomDio extends DioForNative {
   CustomDio()
       : super(BaseOptions(
-          baseUrl: 'http://localhost:3000',
+          baseUrl: 'http://10.0.2.2:3000',
           connectTimeout: 5000,
           receiveTimeout: 6000,
         )) {

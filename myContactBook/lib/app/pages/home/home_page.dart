@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:my_contact_book/app/core/ui/theme/theme_config.dart';
+import 'package:my_contact_book/app/core/ui/widgets/appbar_widget.dart';
 import 'package:my_contact_book/app/core/ui/widgets/divider_widget.dart';
 import 'package:my_contact_book/app/core/ui/widgets/header_error_widget.dart';
+import 'package:my_contact_book/app/core/ui/widgets/login_icon_widget.dart';
 
 class CBHomePage extends StatefulWidget {
   const CBHomePage({super.key});
@@ -26,9 +28,9 @@ class _CBHomePageState extends State<CBHomePage> {
       ),
     ];
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: context.theme.colorScheme.inversePrimary,
-        title: const Text('Agenda'),
+      appBar: CBAppBarWidget(
+        title: 'Agenda',
+        actions: const [CBLoginIconButtonWidget()],
       ),
       body: Center(
         child: Column(
