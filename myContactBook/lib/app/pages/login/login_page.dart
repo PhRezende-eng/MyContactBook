@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_contact_book/app/core/ui/widgets/appbar_widget.dart';
+import 'package:my_contact_book/app/core/ui/widgets/header_error_widget.dart';
 import 'package:my_contact_book/app/pages/login/login_controller.dart';
+import 'package:my_contact_book/app/pages/login/login_state.dart';
 import 'package:my_contact_book/app/repository/login/login_repository.dart';
 import 'package:provider/provider.dart';
 
@@ -13,10 +16,17 @@ class CBLoginPage extends StatefulWidget {
 
 class _CBLoginPageState extends State<CBLoginPage> {
   late CBLoginController controller;
+
   @override
   void initState() {
     super.initState();
     controller = context.read<CBLoginController>();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    controller.dispose();
   }
 
   @override
@@ -33,12 +43,30 @@ class _CBLoginPageState extends State<CBLoginPage> {
               child: Column(
                 children: [
                   Text('Faça seu login'),
+                  const SizedBox(height: 16),
+                  BlocBuilder<CBLoginController, CBLoginState>(
+                    builder: (context, state) {
+                      if (state.status == CBLoginStatus.errors) {
+                        return Column(
+                          children: state.errors!
+                              .map((error) => Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: CBHEaderErrorWidget(message: error),
+                                  ))
+                              .toList(),
+                        );
+                      }
+                      return const SizedBox();
+                    },
+                  ),
+                  const SizedBox(height: 16),
                   TextFormField(
                     controller: controller.emailController,
                     decoration: InputDecoration(
                       labelText: 'Email',
                     ),
                   ),
+                  const SizedBox(height: 16),
                   TextFormField(
                     controller: controller.passController,
                     decoration: InputDecoration(

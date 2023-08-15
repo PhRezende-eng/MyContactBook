@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:my_contact_book/app/core/config/api_excpetion.dart';
 import 'package:my_contact_book/app/pages/login/login_state.dart';
 import 'package:my_contact_book/app/repository/login/login_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -23,17 +24,25 @@ class CBLoginController extends Cubit<CBLoginState> {
       // sp.setString('accessToken', user.accessToken);
       // sp.setString('refreshToken', user.refreshToken);
       emit(state.copyWith(status: CBLoginStatus.loaded, user: user));
-    } catch (e, s) {
+    } on CBApiException catch (e, s) {
       const errorMessage = 'Erro ao cadastrar usuário';
       log(errorMessage, error: e, stackTrace: s);
+      emit(state.copyWith(status: CBLoginStatus.errors, errors: e.messages));
+      throw CBApiException(e.messages);
     }
+  }
+
+  void dispose() {
+    emailController.dispose();
+    passController.dispose();
   }
 
   void onPressedCreateUser(BuildContext context) async {
     if (formKey.currentState?.validate() == true) {
       final navigator = Navigator.of(context);
-      await createUser(emailController.text, passController.text);
-      navigator.pop();
+      createUser(emailController.text, passController.text).then(
+        (value) => navigator.pop(),
+      );
     }
   }
 }
