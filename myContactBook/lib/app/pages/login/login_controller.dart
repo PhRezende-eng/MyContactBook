@@ -32,6 +32,21 @@ class CBLoginController extends Cubit<CBLoginState> {
     }
   }
 
+  Future<void> loginUser(String email, String password) async {
+    try {
+      emit(state.copyWith(status: CBLoginStatus.loading));
+      final user = await _loginRepository.loginUser(email, password);
+      final sp = await SharedPreferences.getInstance();
+      sp.setString('accessToken', user.accessToken);
+      emit(state.copyWith(status: CBLoginStatus.loaded, user: user));
+    } on CBApiException catch (e, s) {
+      const errorMessage = 'Erro ao logar usuário';
+      log(errorMessage, error: e, stackTrace: s);
+      emit(state.copyWith(status: CBLoginStatus.errors, errors: e.messages));
+      throw CBApiException(e.messages);
+    }
+  }
+
   void dispose() {
     emailController.dispose();
     passController.dispose();
@@ -39,8 +54,14 @@ class CBLoginController extends Cubit<CBLoginState> {
 
   void onPressedCreateUser(BuildContext context) async {
     if (formKey.currentState?.validate() == true) {
+      createUser(emailController.text, passController.text);
+    }
+  }
+
+  void onPressedLoginUser(BuildContext context) async {
+    if (formKey.currentState?.validate() == true) {
       final navigator = Navigator.of(context);
-      createUser(emailController.text, passController.text).then(
+      loginUser(emailController.text, passController.text).then(
         (value) => navigator.pop(),
       );
     }

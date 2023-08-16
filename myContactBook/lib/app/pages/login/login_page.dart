@@ -35,64 +35,67 @@ class _CBLoginPageState extends State<CBLoginPage> {
       appBar: CBAppBarWidget(
         title: 'Agenda',
       ),
-      body: CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(
-            child: Form(
-              key: controller.formKey,
-              child: Column(
-                children: [
-                  Text('Faça seu login'),
-                  const SizedBox(height: 16),
-                  BlocBuilder<CBLoginController, CBLoginState>(
-                    builder: (context, state) {
-                      if (state.status == CBLoginStatus.errors) {
-                        return Column(
-                          children: state.errors!
-                              .map((error) => Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: CBHEaderErrorWidget(message: error),
-                                  ))
-                              .toList(),
-                        );
-                      }
-                      return const SizedBox();
-                    },
-                  ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: controller.emailController,
-                    decoration: InputDecoration(
-                      labelText: 'Email',
+      body: BlocBuilder<CBLoginController, CBLoginState>(
+          builder: (context, state) {
+        return CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: Form(
+                key: controller.formKey,
+                child: Column(
+                  children: [
+                    Text('Faça seu login'),
+                    const SizedBox(height: 16),
+                    if (state.status == CBLoginStatus.errors)
+                      Column(
+                        children: state.errors!
+                            .map((error) => Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: CBHEaderErrorWidget(message: error),
+                                ))
+                            .toList(),
+                      ),
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      controller: controller.emailController,
+                      decoration: InputDecoration(
+                        labelText: 'Email',
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: controller.passController,
-                    decoration: InputDecoration(
-                      labelText: 'Senha',
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      controller: controller.passController,
+                      decoration: InputDecoration(
+                        labelText: 'Senha',
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-          SliverFillRemaining(
-            hasScrollBody: false,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                FilledButton(onPressed: () {}, child: Text('Fazer login')),
-                TextButton(
-                  onPressed: () => controller.onPressedCreateUser(context),
-                  child: const Text('ou Criar conta'),
-                ),
-                SizedBox(height: 8),
-              ],
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: state.status == CBLoginStatus.loading
+                  ? const Center(child: CircularProgressIndicator())
+                  : Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        FilledButton(
+                            onPressed: () =>
+                                controller.onPressedLoginUser(context),
+                            child: Text('Fazer login')),
+                        TextButton(
+                          onPressed: () =>
+                              controller.onPressedCreateUser(context),
+                          child: const Text('ou Criar conta'),
+                        ),
+                        SizedBox(height: 8),
+                      ],
+                    ),
             ),
-          ),
-        ],
-      ),
+          ],
+        );
+      }),
     );
   }
 }

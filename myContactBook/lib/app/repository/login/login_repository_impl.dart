@@ -12,7 +12,7 @@ class CBLoginRepositoryImpl implements CBLoginRepository {
   Future<CBUserModel> createUser(String email, String password) async {
     try {
       final response = await dio.post(
-        "/login",
+        "/user/register",
         data: {"email": email, "password": password},
       );
       final apiResponse = response.data;
@@ -28,7 +28,32 @@ class CBLoginRepositoryImpl implements CBLoginRepository {
       }
     } on DioError catch (e) {
       throw CBApiException(
-        e.response?.data['errors'] ?? 'Erro ao fazer a request',
+        e.response?.data['errors'] ?? ['Erro ao fazer a request'],
+      );
+    }
+  }
+
+  @override
+  Future<CBUserModel> loginUser(String email, String password) async {
+    try {
+      final response = await dio.post(
+        "/user/login",
+        data: {"email": email, "password": password},
+      );
+      final apiResponse = response.data;
+
+      if (apiResponse['statusMessage'] == 'success') {
+        return CBUserModel.fromJson(apiResponse['body']);
+      } else {
+        var errors = <String>[];
+        for (var error in apiResponse['error']) {
+          errors.add(error);
+        }
+        throw CBApiException(errors);
+      }
+    } on DioError catch (e) {
+      throw CBApiException(
+        e.response?.data['errors'] ?? ['Erro ao fazer a request'],
       );
     }
   }
