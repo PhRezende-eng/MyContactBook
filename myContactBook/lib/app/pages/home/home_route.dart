@@ -16,3 +16,4 @@ class HomeRoute {
         },
       );
 }
+//TODO: get user data on home and by rquest user/auth
