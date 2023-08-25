@@ -13,14 +13,13 @@ class CBHomeController extends Cubit<CBHomeState> {
   Future<void> getUser() async {
     try {
       emit(state.copyWith(status: CBHomeStatus.loading));
-      await Future.delayed(Duration(seconds: 2));
+      await Future.delayed(const Duration(seconds: 2));
       final sp = await SharedPreferences.getInstance();
       final accessToken = sp.getString('accessToken');
       final userId = sp.getString('userId');
-
       if (accessToken != null && userId != null) {
         final user = await _homeRepository.getUser(userId, accessToken);
-        emit(state.copyWith(user: user, status: CBHomeStatus.loading));
+        emit(state.copyWith(user: user, status: CBHomeStatus.loaded));
       } else {
         emit(state.copyWith(status: CBHomeStatus.errors, errors: [
           'Você não está logado, crie sua conta ou faça login para criar e ver sua lista de contato.'

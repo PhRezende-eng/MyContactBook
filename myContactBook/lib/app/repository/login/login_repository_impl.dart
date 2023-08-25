@@ -3,6 +3,7 @@ import 'package:my_contact_book/app/core/client/rest_client.dart';
 import 'package:my_contact_book/app/core/config/api_excpetion.dart';
 import 'package:my_contact_book/app/models/user_model.dart';
 import 'package:my_contact_book/app/repository/login/login_repository.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CBLoginRepositoryImpl implements CBLoginRepository {
   CustomDio dio;
@@ -18,7 +19,11 @@ class CBLoginRepositoryImpl implements CBLoginRepository {
       final apiResponse = response.data;
 
       if (apiResponse['statusMessage'] == 'success') {
-        return CBUserModel.fromJson(apiResponse['body']);
+        final sp = await SharedPreferences.getInstance();
+        await sp.setString('accessToken', apiResponse['accessToken']);
+        final user = CBUserModel.fromJson(apiResponse['body']);
+        await sp.setString('userId', user.id ?? '');
+        return user;
       } else {
         var errors = <String>[];
         for (var error in apiResponse['error']) {
@@ -43,7 +48,11 @@ class CBLoginRepositoryImpl implements CBLoginRepository {
       final apiResponse = response.data;
 
       if (apiResponse['statusMessage'] == 'success') {
-        return CBUserModel.fromJson(apiResponse['body']);
+        final sp = await SharedPreferences.getInstance();
+        await sp.setString('accessToken', apiResponse['accessToken']);
+        final user = CBUserModel.fromJson(apiResponse['body']);
+        await sp.setString('userId', user.id ?? '');
+        return user;
       } else {
         var errors = <String>[];
         for (var error in apiResponse['error']) {

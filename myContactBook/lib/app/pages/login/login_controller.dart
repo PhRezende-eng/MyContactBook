@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:my_contact_book/app/core/config/api_excpetion.dart';
 import 'package:my_contact_book/app/pages/login/login_state.dart';
 import 'package:my_contact_book/app/repository/login/login_repository.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class CBLoginController extends Cubit<CBLoginState> {
   final CBLoginRepository _loginRepository;
@@ -20,9 +19,6 @@ class CBLoginController extends Cubit<CBLoginState> {
     try {
       emit(state.copyWith(status: CBLoginStatus.loading));
       final user = await _loginRepository.createUser(email, password);
-      final sp = await SharedPreferences.getInstance();
-      sp.setString('accessToken', user.accessToken);
-      sp.setString('userId', user.id ?? '');
       emit(state.copyWith(status: CBLoginStatus.loaded, user: user));
     } on CBApiException catch (e, s) {
       const errorMessage = 'Erro ao cadastrar usuário';
@@ -36,9 +32,6 @@ class CBLoginController extends Cubit<CBLoginState> {
     try {
       emit(state.copyWith(status: CBLoginStatus.loading));
       final user = await _loginRepository.loginUser(email, password);
-      final sp = await SharedPreferences.getInstance();
-      sp.setString('accessToken', user.accessToken);
-      sp.setString('userId', user.id ?? '');
       emit(state.copyWith(status: CBLoginStatus.loaded, user: user));
     } on CBApiException catch (e, s) {
       const errorMessage = 'Erro ao logar usuário';
@@ -55,7 +48,10 @@ class CBLoginController extends Cubit<CBLoginState> {
 
   void onPressedCreateUser(BuildContext context) async {
     if (formKey.currentState?.validate() == true) {
-      createUser(emailController.text, passController.text);
+      final navigator = Navigator.of(context);
+      createUser(emailController.text, passController.text).then(
+        (value) => navigator.pop(),
+      );
     }
   }
 

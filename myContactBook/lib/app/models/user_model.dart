@@ -9,7 +9,7 @@ class CBUserModel {
       this.id, this.email, this.password, this.accessToken, this.refreshToken);
 
   factory CBUserModel.fromJson(Map<String, dynamic> json) => CBUserModel(
-        json['id'] ?? '',
+        json['_id'] ?? '',
         json['email'] ?? '',
         json['password'] ?? '',
         json['accessToken'] ?? '',
