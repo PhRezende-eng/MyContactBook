@@ -20,9 +20,9 @@ class CBLoginController extends Cubit<CBLoginState> {
     try {
       emit(state.copyWith(status: CBLoginStatus.loading));
       final user = await _loginRepository.createUser(email, password);
-      // final sp = await SharedPreferences.getInstance();
-      // sp.setString('accessToken', user.accessToken);
-      // sp.setString('refreshToken', user.refreshToken);
+      final sp = await SharedPreferences.getInstance();
+      sp.setString('accessToken', user.accessToken);
+      sp.setString('userId', user.id ?? '');
       emit(state.copyWith(status: CBLoginStatus.loaded, user: user));
     } on CBApiException catch (e, s) {
       const errorMessage = 'Erro ao cadastrar usuário';
@@ -38,6 +38,7 @@ class CBLoginController extends Cubit<CBLoginState> {
       final user = await _loginRepository.loginUser(email, password);
       final sp = await SharedPreferences.getInstance();
       sp.setString('accessToken', user.accessToken);
+      sp.setString('userId', user.id ?? '');
       emit(state.copyWith(status: CBLoginStatus.loaded, user: user));
     } on CBApiException catch (e, s) {
       const errorMessage = 'Erro ao logar usuário';
