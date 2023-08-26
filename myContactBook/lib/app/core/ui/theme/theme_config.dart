@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class CBThemeConfig {
   CBThemeConfig._();
-  static ColorScheme _scheme = ColorScheme.dark(
+  static const ColorScheme _scheme = ColorScheme.dark(
     error: Color.fromARGB(255, 255, 0, 55),
     errorContainer: Color.fromARGB(255, 255, 202, 213),
   );
@@ -11,10 +11,10 @@ class CBThemeConfig {
     appBarTheme:
         AppBarTheme(backgroundColor: CBThemeConfig._scheme.inversePrimary),
     colorScheme: CBThemeConfig._scheme,
-    inputDecorationTheme: InputDecorationTheme(
+    inputDecorationTheme: const InputDecorationTheme(
       border: OutlineInputBorder(),
     ),
-    textTheme: TextTheme(
+    textTheme: const TextTheme(
       titleMedium: TextStyle(
         fontSize: 24,
         fontWeight: FontWeight.w600,

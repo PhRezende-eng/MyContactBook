@@ -4,8 +4,6 @@ import 'package:my_contact_book/app/core/ui/widgets/appbar_widget.dart';
 import 'package:my_contact_book/app/core/ui/widgets/header_error_widget.dart';
 import 'package:my_contact_book/app/pages/login/login_controller.dart';
 import 'package:my_contact_book/app/pages/login/login_state.dart';
-import 'package:my_contact_book/app/repository/login/login_repository.dart';
-import 'package:provider/provider.dart';
 
 class CBLoginPage extends StatefulWidget {
   const CBLoginPage({super.key});
@@ -44,7 +42,8 @@ class _CBLoginPageState extends State<CBLoginPage> {
                 key: controller.formKey,
                 child: Column(
                   children: [
-                    Text('Faça seu login'),
+                    const SizedBox(height: 16),
+                    const Text('Faça seu login'),
                     const SizedBox(height: 16),
                     if (state.status == CBLoginStatus.errors)
                       Column(
@@ -58,16 +57,12 @@ class _CBLoginPageState extends State<CBLoginPage> {
                     const SizedBox(height: 16),
                     TextFormField(
                       controller: controller.emailController,
-                      decoration: InputDecoration(
-                        labelText: 'Email',
-                      ),
+                      decoration: const InputDecoration(labelText: 'Email'),
                     ),
                     const SizedBox(height: 16),
                     TextFormField(
                       controller: controller.passController,
-                      decoration: InputDecoration(
-                        labelText: 'Senha',
-                      ),
+                      decoration: const InputDecoration(labelText: 'Senha'),
                     ),
                   ],
                 ),
@@ -80,16 +75,17 @@ class _CBLoginPageState extends State<CBLoginPage> {
                   : Column(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
+                        const SizedBox(height: 16),
                         FilledButton(
                             onPressed: () =>
                                 controller.onPressedLoginUser(context),
-                            child: Text('Fazer login')),
+                            child: const Text('Fazer login')),
                         TextButton(
                           onPressed: () =>
                               controller.onPressedCreateUser(context),
                           child: const Text('ou Criar conta'),
                         ),
-                        SizedBox(height: 8),
+                        const SizedBox(height: 16),
                       ],
                     ),
             ),

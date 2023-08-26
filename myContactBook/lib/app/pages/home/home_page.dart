@@ -8,7 +8,6 @@ import 'package:my_contact_book/app/core/ui/widgets/loading_widget.dart';
 import 'package:my_contact_book/app/core/ui/widgets/login_icon_widget.dart';
 import 'package:my_contact_book/app/pages/home/home_controller.dart';
 import 'package:my_contact_book/app/pages/home/home_state.dart';
-import 'package:provider/provider.dart';
 
 class CBHomePage extends StatefulWidget {
   const CBHomePage({super.key});
