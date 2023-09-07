@@ -8,6 +8,7 @@ import 'package:my_contact_book/app/core/ui/widgets/loading_widget.dart';
 import 'package:my_contact_book/app/core/ui/widgets/login_icon_widget.dart';
 import 'package:my_contact_book/app/pages/home/home_controller.dart';
 import 'package:my_contact_book/app/pages/home/home_state.dart';
+import 'package:my_contact_book/app/service/user_service.dart';
 
 class CBHomePage extends StatefulWidget {
   const CBHomePage({super.key});
@@ -27,18 +28,18 @@ class _CBHomePageState extends State<CBHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // var list = <Widget>[
-    //   const SizedBox(height: 16),
-    //   Row(
-    //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-    //     children: [
-    //       Text('Luiz', style: context.theme.textTheme.headlineSmall),
-    //       Text('Otávio', style: context.theme.textTheme.headlineSmall),
-    //       Text('Número', style: context.theme.textTheme.headlineSmall),
-    //       Text('Email', style: context.theme.textTheme.headlineSmall),
-    //     ],
-    //   ),
-    // ];
+    var list = <Widget>[
+      const SizedBox(height: 16),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Text('Luiz', style: context.theme.textTheme.headlineSmall),
+          Text('Otávio', style: context.theme.textTheme.headlineSmall),
+          Text('Número', style: context.theme.textTheme.headlineSmall),
+          Text('Email', style: context.theme.textTheme.headlineSmall),
+        ],
+      ),
+    ];
     return Scaffold(
       appBar: CBAppBarWidget(
         title: 'Agenda',
@@ -46,10 +47,11 @@ class _CBHomePageState extends State<CBHomePage> {
       ),
       body: BlocBuilder<CBHomeController, CBHomeState>(
         builder: (context, state) {
+          final user = context.watch<CBUserService>().user;
           if (state.status == CBHomeStatus.loading) {
             return const CBLoadingWidget(
                 title: "Carregando sua lista de contato...");
-          } else if (state.status == CBHomeStatus.errors) {
+          } else if (state.status == CBHomeStatus.errors && user == null) {
             return Column(
               children: state.errors!
                   .map((error) => Padding(
@@ -59,25 +61,29 @@ class _CBHomePageState extends State<CBHomePage> {
                   .toList(),
             );
           } else {
-            return Center(
-              child: Column(
-                children: <Widget>[
-                  Text(
-                    'Agenda',
-                    style: context.theme.textTheme.titleMedium,
-                  ),
-                  Text(
-                    'Seus contatos estão abaixo',
-                    style: context.theme.textTheme.headlineMedium,
-                  ),
-                  const SizedBox(height: 24),
-                  const CBHEaderErrorWidget(
-                    message: 'Um erro qualquer',
-                  ),
-                  const SizedBox(height: 24),
-                  const CBDivider(),
-                  // ...list,
-                ],
+            return RefreshIndicator(
+              onRefresh: _controller.getUser,
+              child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                child: Column(
+                  children: <Widget>[
+                    Text(
+                      'Agenda',
+                      style: context.theme.textTheme.titleMedium,
+                    ),
+                    Text(
+                      'Seus contatos estão abaixo',
+                      style: context.theme.textTheme.headlineMedium,
+                    ),
+                    const SizedBox(height: 24),
+                    const CBHEaderErrorWidget(
+                      message: 'Um erro qualquer',
+                    ),
+                    const SizedBox(height: 24),
+                    const CBDivider(),
+                    ...list,
+                  ],
+                ),
               ),
             );
           }

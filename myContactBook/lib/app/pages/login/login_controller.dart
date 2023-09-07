@@ -50,7 +50,7 @@ class CBLoginController extends Cubit<CBLoginState> {
     if (formKey.currentState?.validate() == true) {
       final navigator = Navigator.of(context);
       createUser(emailController.text, passController.text).then(
-        (value) => navigator.pop(),
+        (value) => navigator.pop(state.user),
       );
     }
   }
@@ -59,7 +59,7 @@ class CBLoginController extends Cubit<CBLoginState> {
     if (formKey.currentState?.validate() == true) {
       final navigator = Navigator.of(context);
       loginUser(emailController.text, passController.text).then(
-        (value) => navigator.pop(),
+        (value) => navigator.pop(state.user),
       );
     }
   }

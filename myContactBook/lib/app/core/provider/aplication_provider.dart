@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_contact_book/app/core/client/rest_client.dart';
+import 'package:my_contact_book/app/service/user_service.dart';
 import 'package:provider/provider.dart';
 
 class CBAplicationBinding extends StatelessWidget {
@@ -12,6 +13,9 @@ class CBAplicationBinding extends StatelessWidget {
       providers: [
         Provider(
           create: (context) => CustomDio(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => CBUserService(),
         ),
       ],
       child: child,

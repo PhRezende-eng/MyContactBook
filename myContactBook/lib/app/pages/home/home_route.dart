@@ -15,8 +15,8 @@ class HomeRoute {
                 CBHomeRepositoryImpl(context.read<CustomDio>()),
           ),
           Provider(
-              create: (context) =>
-                  CBHomeController(context.read<CBHomeRepositoryImpl>()))
+              create: (context) => CBHomeController(
+                  context.read<CBHomeRepositoryImpl>(), context))
         ],
         builder: (context, child) {
           return const CBHomePage();
