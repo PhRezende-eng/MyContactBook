@@ -16,6 +16,12 @@ class CBHomeController extends Cubit<CBHomeState> {
   CBHomeController(this._homeRepository, this._context)
       : super(const CBHomeState.initial());
 
+  void updateStateByUser(CBUserModel? user) {
+    if (user != null && state.user != user) {
+      emit(state.copyWith(user: user, status: CBHomeStatus.loaded, errors: []));
+    }
+  }
+
   Future<void> getUser() async {
     final userService = _context.read<CBUserService>();
     try {

@@ -19,16 +19,14 @@ class CBHomePage extends StatefulWidget {
 
 class _CBHomePageState extends State<CBHomePage> {
   late CBHomeController _controller;
+  late List<Widget> list;
+
   @override
   void initState() {
     super.initState();
     _controller = context.read<CBHomeController>();
     _controller.getUser();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    var list = <Widget>[
+    list = <Widget>[
       const SizedBox(height: 16),
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -40,6 +38,13 @@ class _CBHomePageState extends State<CBHomePage> {
         ],
       ),
     ];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final user = context.watch<CBUserService>().user;
+    _controller.updateStateByUser(user);
+
     return Scaffold(
       appBar: CBAppBarWidget(
         title: 'Agenda',
@@ -47,11 +52,10 @@ class _CBHomePageState extends State<CBHomePage> {
       ),
       body: BlocBuilder<CBHomeController, CBHomeState>(
         builder: (context, state) {
-          final user = context.watch<CBUserService>().user;
           if (state.status == CBHomeStatus.loading) {
             return const CBLoadingWidget(
                 title: "Carregando sua lista de contato...");
-          } else if (state.status == CBHomeStatus.errors && user == null) {
+          } else if (state.status == CBHomeStatus.errors) {
             return Column(
               children: state.errors!
                   .map((error) => Padding(
